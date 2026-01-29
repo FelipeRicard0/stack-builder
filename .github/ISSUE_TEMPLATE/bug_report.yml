@@ -1,0 +1,86 @@
+name: 🐛 Bug Report
+description: Report a bug in the project
+title: "[BUG] - "
+labels: ["bug"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a bug! Please fill out the fields below with as much detail as possible.
+
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Operating system, browser, app version, etc.
+      placeholder: "Example: Windows 10, Chrome 115, Node 18.17"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: Clearly describe what is happening.
+      placeholder: "Example: When clicking the login button, the screen ..."
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: How can we reproduce the bug?
+      placeholder: |
+        Example:
+        1. Go to '...'
+        2. Click on '...'
+        3. Scroll to '...'
+        4. See the error
+    validations:
+      required: true
+
+  - type: dropdown
+    id: bug-frequency
+    attributes:
+      label: How often does this bug occur?
+      description: Let us know how frequently the bug happens. This helps us understand the impact and prioritize the fix.
+      options:
+        - Always
+        - Frequently
+        - Sometimes
+        - Rarely
+        - Only once
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+      placeholder: "Example: After clicking 'Login', the user should ..."
+      render: text
+    validations:
+      required: false
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots or Logs
+      description: Add any material that may help understand or reproduce the bug.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Before submitting
+      description: Confirm the items below to help with analysis and avoid duplicates.
+      options:
+        - label: I checked for existing similar issues
+          required: true
+        - label: I’m using the latest version of the project
+          required: true

@@ -1,0 +1,48 @@
+name: ✨ Feature Request
+description: Suggest a new feature or improvement
+title: "[FEATURE] - "
+labels: ["feature"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting a new feature! Please fill out the fields below to help us better understand your idea.
+
+  - type: textarea
+    id: descricao
+    attributes:
+      label: Feature Description
+      description: Clearly explain the proposed feature.
+      placeholder: "Example: Allow users to switch between light and dark theme."
+    validations:
+      required: true
+
+  - type: textarea
+    id: justificativa
+    attributes:
+      label: What problem or need does it address?
+      description: What is the motivation behind this feature?
+      placeholder: "Example: Many users prefer to use the app in low-light environments..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: impacto
+    attributes:
+      label: What is the expected impact?
+      placeholder: "Example: Improved user experience..."
+      render: text
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: termos
+    attributes:
+      label: Before submitting
+      description: Confirm the items below to help us evaluate your suggestion.
+      options:
+        - label: I checked if a similar issue already exists
+          required: true
+        - label: This feature has not been implemented yet
+          required: true
