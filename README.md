@@ -71,14 +71,6 @@ Para rodar o projeto localmente, siga os passos abaixo.
    pnpm run dev
    ```
 
-## 📁 Variáveis de Ambiente
-
-Crie um arquivo `.env` na raiz do projeto e adicione as seguinte variáveis:
-
-```env
-VITE_API_KEY=url_da_api
-```
-
 ## Licença
 
 Distribuído sob a licença personalizada de uso não comercial. Veja [`LICENSE`](https://github.com/FelipeRicard0/stack-builder/blob/main/LICENSE) para mais informações.

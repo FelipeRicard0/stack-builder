@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -49,6 +49,7 @@ import {
 import { cn } from "@/lib/utils";
 import CommandStep from "@/components/command-step";
 import { ModeToggle } from "@/components/mode-toggle";
+import { useTranslation } from "react-i18next";
 
 function CategorySection({
   category,
@@ -61,6 +62,7 @@ function CategorySection({
   onSelect: (tech: Technology, category: (typeof categories)[number]) => void;
   isIncompatible: (tech: Technology) => boolean;
 }) {
+  const { t } = useTranslation();
   return (
     <section>
       <div className="mb-4 flex items-center gap-2">
@@ -70,7 +72,7 @@ function CategorySection({
         </h2>
         {category.singleSelect && (
           <Badge variant="outline" className="text-[10px]">
-            Select one
+            {t("select_one")}
           </Badge>
         )}
       </div>
@@ -140,6 +142,7 @@ function FolderStructure({
   projectName: string;
   selections: Set<string>;
 }) {
+  const { t } = useTranslation();
   const generateStructure = () => {
     // Helper function to get the correct file extension based on TypeScript selection
     const getExt = (type: "ts" | "tsx" = "ts"): string => {
@@ -384,7 +387,7 @@ function FolderStructure({
   return (
     <div>
       <h2 className="text-foreground mb-4 font-mono text-sm font-medium">
-        Recommended Structure
+        {t("recommended_structure")}
       </h2>
       <div className="border-border bg-card border p-4">
         <div className="space-y-1 font-mono text-sm">
@@ -417,7 +420,9 @@ function FolderStructure({
 }
 
 function ShareDialog({ selections }: { selections: Set<string> }) {
+  const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
+  const { lang } = useParams();
 
   // Map category IDs to URL parameter names
   const categoryMap: Record<string, string> = {
@@ -467,8 +472,8 @@ function ShareDialog({ selections }: { selections: Set<string> }) {
 
     const baseUrl =
       typeof window !== "undefined"
-        ? `${window.location.origin}/builder`
-        : "http://localhost:3000/builder";
+        ? `${window.location.origin}/${lang}/builder`
+        : `http://stack-builder/${lang}/builder`;
 
     return params.toString() ? `${baseUrl}?${params.toString()}` : baseUrl;
   };
@@ -498,25 +503,21 @@ function ShareDialog({ selections }: { selections: Set<string> }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          size="sm"
-          className="flex-1 gap-1.5 bg-transparent"
-        >
+        <Button variant="outline" className="flex-1 gap-1.5 bg-transparent">
           <Share2 className="h-3.5 w-3.5" />
-          Share
+          {t("share")}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Share Your Stack</DialogTitle>
-          <DialogDescription>
-            Share this configuration with others
-          </DialogDescription>
+          <DialogTitle>{t("share_your_stack")}</DialogTitle>
+          <DialogDescription>{t("share_this_configuration")}</DialogDescription>
         </DialogHeader>
         <div className="space-y-4">
           <div>
-            <h3 className="mb-3 text-sm font-medium">Selected Technologies</h3>
+            <h3 className="mb-3 text-sm font-medium">
+              {t("selected_technologies")}
+            </h3>
             <div className="flex flex-wrap gap-2">
               {selectedTechs.length > 0 ? (
                 selectedTechs.map((tech) => (
@@ -542,26 +543,28 @@ function ShareDialog({ selections }: { selections: Set<string> }) {
                 ))
               ) : (
                 <p className="text-muted-foreground text-xs">
-                  No technologies selected yet
+                  {t("no_technologies_selected_yet")}
                 </p>
               )}
             </div>
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium">Share Link</label>
+            <label className="mb-2 block text-sm font-medium">
+              {t("share_lin")}
+            </label>
             <div className="flex gap-2">
               <Input type="text" value={shareUrl} readOnly />
               <Button onClick={handleCopy}>
                 {copied ? (
                   <>
                     <Check className="h-4 w-4" />
-                    Copied
+                    {t("copied_btn")}
                   </>
                 ) : (
                   <>
                     <Copy className="h-4 w-4" />
-                    Copy
+                    {t("copy_btn")}
                   </>
                 )}
               </Button>
@@ -574,6 +577,9 @@ function ShareDialog({ selections }: { selections: Set<string> }) {
 }
 
 export default function BuilderPage() {
+  const { t } = useTranslation();
+  const { lang } = useParams();
+
   const searchParams = useSearchParams()[0];
   const presetParam = searchParams.get("preset");
 
@@ -746,23 +752,23 @@ export default function BuilderPage() {
         <header className="border-border flex h-14 shrink-0 items-center justify-between border-b px-4">
           <div className="flex items-center gap-4">
             <Link
-              to="/"
+              to={`/${lang}`}
               className="text-muted-foreground hover:text-foreground flex items-center gap-2 transition-colors"
             >
               <ArrowLeft className="size-4" />
-              <span className="hidden text-sm sm:inline">Back</span>
+              <span className="hidden text-sm sm:inline">{t("back_btn")}</span>
             </Link>
             <div className="flex items-center gap-2">
               <img
                 className="dark:invert"
-                src="Logo_dark.svg"
+                src="/Logo_dark.svg"
                 alt="Logo"
                 height={28}
                 width={28}
               />
-              <span className="font-semibold">StackForge</span>
+              <span className="font-semibold">Stack Builder</span>
               <Badge variant="outline" className="text-xs">
-                Builder
+                {t("builder_badge")}
               </Badge>
             </div>
           </div>
@@ -775,7 +781,7 @@ export default function BuilderPage() {
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent className="pointer-events-none">
-                  Reset all
+                  {t("reset_all")}
                 </TooltipContent>
               </Tooltip>
               <Tooltip disableHoverableContent>
@@ -785,13 +791,13 @@ export default function BuilderPage() {
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent className="pointer-events-none">
-                  Random stack
+                  {t("random_stack")}
                 </TooltipContent>
               </Tooltip>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" className="gap-1 bg-transparent">
-                    Presets
+                    {t("presets")}
                     <ChevronDown className="size-3" />
                   </Button>
                 </DropdownMenuTrigger>
@@ -818,7 +824,7 @@ export default function BuilderPage() {
           <aside className="border-border bg-sidebar flex w-72 shrink-0 flex-col border-r">
             <div className="border-border border-b p-4">
               <label className="text-muted-foreground mb-2 block text-xs font-medium">
-                Project Name
+                {t("project_name")}
               </label>
               <Input
                 value={projectName}
@@ -830,14 +836,9 @@ export default function BuilderPage() {
             <div className="border-border border-b p-4">
               <div className="mb-2 flex items-center justify-between">
                 <span className="text-muted-foreground text-xs font-medium">
-                  Command
+                  {t("command_label")}
                 </span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-6 px-2"
-                  onClick={handleCopy}
-                >
+                <Button variant="ghost" size="icon-xs" onClick={handleCopy}>
                   {copied ? (
                     <Check className="text-foreground size-3" />
                   ) : (
@@ -855,7 +856,7 @@ export default function BuilderPage() {
             <div className="flex-1 overflow-hidden p-4">
               <div className="mb-2 flex items-center justify-between">
                 <span className="text-muted-foreground text-xs font-medium">
-                  Selected Stack
+                  {t("selected_stack")}
                 </span>
                 <Badge variant="secondary" className="text-xs">
                   {selectedTechs.length}
@@ -865,7 +866,7 @@ export default function BuilderPage() {
                 <div className="flex flex-wrap gap-1.5">
                   {selectedTechs.length === 0 ? (
                     <p className="text-muted-foreground text-sm">
-                      No technologies selected
+                      {t("no_technologies_selected")}
                     </p>
                   ) : (
                     selectedTechs.map((tech) => (
@@ -898,11 +899,10 @@ export default function BuilderPage() {
                 <ShareDialog selections={selections} />
                 <Button
                   variant="outline"
-                  size="sm"
                   className="flex-1 gap-1.5 bg-transparent"
                 >
                   <Save className="h-3.5 w-3.5" />
-                  Save
+                  {t("save_btn")}
                 </Button>
               </div>
             </div>
@@ -920,25 +920,24 @@ export default function BuilderPage() {
                     className="data-[state=active]:bg-secondary gap-2"
                   >
                     <Settings className="size-4" />
-                    Configure
+                    {t("configure_tab")}
                   </TabsTrigger>
                   <TabsTrigger
                     value="commands"
                     className="data-[state=active]:bg-secondary gap-2"
                   >
                     <Terminal className="size-4" />
-                    Commands
+                    {t("commands_tab")}
                   </TabsTrigger>
                   <TabsTrigger
                     value="preview"
                     className="data-[state=active]:bg-secondary gap-2"
                   >
                     <Eye className="size-4" />
-                    Preview
+                    {t("preview_tab")}
                   </TabsTrigger>
                 </TabsList>
               </div>
-
               <TabsContent
                 value="configure"
                 className="mt-0 flex-1 overflow-hidden"
@@ -965,10 +964,10 @@ export default function BuilderPage() {
                   <div className="mx-auto max-w-3xl space-y-4 p-6">
                     <div className="mb-6">
                       <h2 className="text-foreground mb-2 font-mono text-sm font-medium">
-                        Setup Commands
+                        {t("setup_commands")}
                       </h2>
                       <p className="text-muted-foreground text-sm">
-                        Run these commands in order to set up your project
+                        {t("run_these_commands")}
                       </p>
                     </div>
                     {allCommands.map((step, index) => (
