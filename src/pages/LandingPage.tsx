@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
 import { Button } from "@/components/ui/button";
@@ -19,8 +18,6 @@ import {
   Sparkles,
   Terminal,
   Zap,
-  Copy,
-  Check,
   Twitter,
   Coffee,
 } from "lucide-react";
@@ -149,13 +146,6 @@ function SupportDialog() {
 
 export default function LandingPage() {
   const { t } = useTranslation();
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText("npx create-stackbuilder@latest my-app");
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
 
   return (
     <>
@@ -250,21 +240,6 @@ export default function LandingPage() {
                   <ArrowRight className="ml-0.5 size-4 transition-transform group-hover:translate-x-1" />
                 </Button>
               </Link>
-              <Button
-                onClick={handleCopy}
-                size={"lg"}
-                className="group border-border bg-secondary/50 hover:bg-secondary gap-3 border font-mono"
-              >
-                <span className="text-muted-foreground">$</span>
-                <span className="text-foreground">
-                  npx create-stackbuilder@latest my-app
-                </span>
-                {copied ? (
-                  <Check className="text-foreground size-4" />
-                ) : (
-                  <Copy className="text-muted-foreground group-hover:text-foreground size-4 transition-colors" />
-                )}
-              </Button>
             </div>
           </div>
           <div className={"relative mt-20"}>
@@ -413,7 +388,7 @@ export default function LandingPage() {
                 <Github className="size-5" />
               </a>
               <a
-                href="https://twitter.com"
+                href="https://x.com/felipe_prado0"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-foreground transition-colors"

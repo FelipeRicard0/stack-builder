@@ -10,7 +10,7 @@ import i18n from "./i18n.ts";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <I18nextProvider i18n={i18n}>
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <ThemeProvider defaultTheme="dark" storageKey="stack-builder-theme">
         <BrowserRouter>
           <App />
         </BrowserRouter>

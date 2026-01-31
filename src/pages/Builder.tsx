@@ -31,7 +31,6 @@ import {
   Check,
   RotateCcw,
   Shuffle,
-  Save,
   Share2,
   ChevronRight,
   Settings,
@@ -503,8 +502,8 @@ function ShareDialog({ selections }: { selections: Set<string> }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" className="flex-1 gap-1.5 bg-transparent">
-          <Share2 className="h-3.5 w-3.5" />
+        <Button variant="outline" className="w-full gap-1.5 bg-transparent">
+          <Share2 className="size-3.5" />
           {t("share")}
         </Button>
       </DialogTrigger>
@@ -895,16 +894,7 @@ export default function BuilderPage() {
               </ScrollArea>
             </div>
             <div className="border-border border-t p-4">
-              <div className="flex gap-2">
-                <ShareDialog selections={selections} />
-                <Button
-                  variant="outline"
-                  className="flex-1 gap-1.5 bg-transparent"
-                >
-                  <Save className="h-3.5 w-3.5" />
-                  {t("save_btn")}
-                </Button>
-              </div>
+              <ShareDialog selections={selections} />
             </div>
           </aside>
           <main className="flex-1 overflow-hidden">
