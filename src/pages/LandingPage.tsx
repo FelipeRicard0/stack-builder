@@ -19,9 +19,11 @@ import {
   Terminal,
   Zap,
   Twitter,
-  Coffee,
+  Menu,
+  X,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useState } from "react";
 
 const techLogos = [
   { name: "React", icon: "react" },
@@ -88,7 +90,7 @@ function SupportDialog() {
     <Dialog>
       <DialogTrigger asChild>
         <Button
-          variant="ghost"
+          variant={window.innerWidth >= 640 ? "ghost" : "outline"}
           className="text-muted-foreground hover:text-foreground cursor-pointer"
         >
           <Heart />
@@ -117,22 +119,6 @@ function SupportDialog() {
               </div>
             </div>
           </a>
-          <a
-            href="https://buymeacoffee.com/FelipeRicard0"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="border-border bg-secondary/50 hover:bg-secondary flex items-center gap-4 border p-4 transition-colors"
-          >
-            <div className="flex size-10 items-center justify-center bg-amber-500/10 text-amber-500">
-              <Coffee className="size-5" />
-            </div>
-            <div>
-              <div className="text-foreground font-medium">Buy Me a Coffee</div>
-              <div className="text-muted-foreground text-sm">
-                {t("buy_me_coffee_desc")}
-              </div>
-            </div>
-          </a>
           <div className="pt-2">
             <p className="text-muted-foreground text-center text-sm">
               {t("thank_you_support")}
@@ -146,10 +132,14 @@ function SupportDialog() {
 
 export default function LandingPage() {
   const { t } = useTranslation();
+  const [menu, setMenu] = useState(false);
+  const [visible, setVisible] = useState(false);
 
   return (
     <>
-      <header className="border-border/50 bg-background/80 fixed top-0 z-10 w-screen border-b backdrop-blur-md">
+      <header
+        className={`border-border/50 bg-background/80 fixed top-0 z-10 w-screen border-b backdrop-blur-md max-sm:transition-[height] max-sm:duration-1000 ${menu ? `max-sm:h-66` : `max-sm:h-16.5`}`}
+      >
         <div className="relative mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2">
             <img
@@ -157,11 +147,13 @@ export default function LandingPage() {
               src="/Logo_dark.svg"
               alt="Logo"
             />
-            <span className="text-lg font-semibold tracking-tight">
+            <span className="text-lg font-semibold tracking-tight max-sm:leading-5.5">
               Stack Builder
             </span>
           </div>
-          <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-6 md:flex">
+          <nav
+            className={`absolute left-1/2 flex -translate-x-1/2 items-center gap-6 max-sm:top-17 max-sm:w-full max-sm:translate-y-0 max-sm:flex-col max-sm:gap-4 max-sm:p-4 max-sm:transition-all ${menu ? `` : `max-sm:opacity-0`} ${visible ? `` : `max-sm:hidden`}`}
+          >
             <HashLink
               to="#features"
               smooth
@@ -184,15 +176,31 @@ export default function LandingPage() {
             >
               GitHub
             </a>
+            {window.innerWidth <= 640 && <SupportDialog />}
           </nav>
           <div className="flex items-center gap-3">
-            <SupportDialog />
+            {window.innerWidth >= 640 && <SupportDialog />}
             <Link to="builder">
               <Button className="cursor-pointer">
                 {t("start_building")}
                 <ArrowRight />
               </Button>
             </Link>
+            {window.innerWidth <= 640 && (
+              <Button
+                className={`cursor-pointer`}
+                variant="outline"
+                size="icon"
+                onClick={() => {
+                  setMenu(!menu);
+                  setTimeout(() => {
+                    setVisible(!visible);
+                  }, 700);
+                }}
+              >
+                {menu ? <X /> : <Menu />}
+              </Button>
+            )}
           </div>
         </div>
       </header>
@@ -374,7 +382,7 @@ export default function LandingPage() {
               </div>
               <span className="text-sm font-medium">Stack Builder</span>
             </div>
-            <p className="text-muted-foreground text-sm">
+            <p className="text-muted-foreground text-sm max-sm:text-center">
               {t("built_with_care")}
             </p>
             <div className="flex items-center gap-4">
