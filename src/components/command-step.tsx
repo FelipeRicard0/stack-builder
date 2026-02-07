@@ -35,7 +35,12 @@ export default function CommandStep({ step, index }: CommandStepProps) {
             {step.label}
           </span>
         </div>
-        <Button variant="ghost" size={"icon-sm"} onClick={handleCopy}>
+        <Button
+          className="cursor-pointer"
+          variant="ghost"
+          size={"icon-sm"}
+          onClick={handleCopy}
+        >
           {copied ? (
             <Check className="text-foreground size-3.5" />
           ) : (

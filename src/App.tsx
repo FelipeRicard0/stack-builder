@@ -3,6 +3,7 @@ import Buildpage from "./pages/Builder";
 import LandingPage from "./pages/LandingPage";
 import i18n from "./i18n";
 import { useEffect } from "react";
+import NotFound from "./pages/NotFound";
 
 function LangLayout() {
   const { lang } = useParams();
@@ -33,6 +34,7 @@ function LangLayout() {
     <Routes>
       <Route index element={<LandingPage />} />
       <Route path="builder" element={<Buildpage />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
