@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
+import { HashLink } from "react-router-hash-link";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -18,11 +18,12 @@ import {
   Sparkles,
   Terminal,
   Zap,
-  Copy,
-  Check,
   Twitter,
-  Coffee,
+  Menu,
+  X,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { useState } from "react";
 
 const techLogos = [
   { name: "React", icon: "react" },
@@ -38,27 +39,23 @@ const techLogos = [
 const features = [
   {
     icon: Layers,
-    title: "Curated Stack Options",
-    description:
-      "Choose from battle-tested technologies across frontend, backend, database, and tooling categories.",
+    title: "curated_stack",
+    description: "choose_battle_tested",
   },
   {
     icon: Zap,
-    title: "Smart Compatibility",
-    description:
-      "Our intelligent system prevents incompatible selections and suggests optimal combinations.",
+    title: "smart_compatibility",
+    description: "intelligent_system",
   },
   {
     icon: Terminal,
-    title: "Instant Commands",
-    description:
-      "Get ready-to-run CLI commands tailored to your selections and preferred package manager.",
+    title: "instant_commands",
+    description: "get_ready_to_run",
   },
   {
     icon: Sparkles,
-    title: "Project Structure",
-    description:
-      "View the recommended folder structure based on your technology choices before you start.",
+    title: "project_structure",
+    description: "view_recommended",
   },
 ];
 
@@ -88,25 +85,22 @@ const presets = [
 ];
 
 function SupportDialog() {
+  const { t } = useTranslation();
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button
-          variant="ghost"
-          size="sm"
+          variant={window.innerWidth >= 640 ? "ghost" : "outline"}
           className="text-muted-foreground hover:text-foreground cursor-pointer"
         >
           <Heart />
-          Support
+          {t("support")}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Support StackForge</DialogTitle>
-          <DialogDescription>
-            Help us keep this project free and open source. Your contribution
-            makes a difference.
-          </DialogDescription>
+          <DialogTitle>{t("support_stackbuilder")}</DialogTitle>
+          <DialogDescription>{t("support_description")}</DialogDescription>
         </DialogHeader>
         <div className="space-y-4 pt-4">
           <a
@@ -121,29 +115,13 @@ function SupportDialog() {
             <div>
               <div className="text-foreground font-medium">GitHub Sponsors</div>
               <div className="text-muted-foreground text-sm">
-                Monthly or one-time support
-              </div>
-            </div>
-          </a>
-          <a
-            href="https://buymeacoffee.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="border-border bg-secondary/50 hover:bg-secondary flex items-center gap-4 border p-4 transition-colors"
-          >
-            <div className="flex size-10 items-center justify-center bg-amber-500/10 text-amber-500">
-              <Coffee className="size-5" />
-            </div>
-            <div>
-              <div className="text-foreground font-medium">Buy Me a Coffee</div>
-              <div className="text-muted-foreground text-sm">
-                Quick one-time contribution
+                {t("github_sponsors_desc")}
               </div>
             </div>
           </a>
           <div className="pt-2">
             <p className="text-muted-foreground text-center text-sm">
-              Thank you for supporting open source!
+              {t("thank_you_support")}
             </p>
           </div>
         </div>
@@ -153,58 +131,76 @@ function SupportDialog() {
 }
 
 export default function LandingPage() {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText("npx create-stackforge@latest my-app");
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+  const { t } = useTranslation();
+  const [menu, setMenu] = useState(false);
+  const [visible, setVisible] = useState(false);
 
   return (
     <>
-      <header className="border-border/50 bg-background/80 fixed top-0 z-10 w-screen border-b backdrop-blur-md">
+      <header
+        className={`border-border/50 bg-background/80 fixed top-0 z-10 w-screen border-b backdrop-blur-md max-sm:transition-[height] max-sm:duration-1000 ${menu ? `max-sm:h-66` : `max-sm:h-16.5`}`}
+      >
         <div className="relative mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2">
             <img
               className="size-8 dark:invert"
-              src="Logo_dark.svg"
+              src="/Logo_dark.svg"
               alt="Logo"
             />
-            <span className="text-lg font-semibold tracking-tight">
-              StackForge
+            <span className="text-lg font-semibold tracking-tight max-sm:leading-5.5">
+              Stack Builder
             </span>
           </div>
-          <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-6 md:flex">
-            <Link
+          <nav
+            className={`absolute left-1/2 flex -translate-x-1/2 items-center gap-6 max-sm:top-17 max-sm:w-full max-sm:translate-y-0 max-sm:flex-col max-sm:gap-4 max-sm:p-4 max-sm:transition-all ${menu ? `` : `max-sm:opacity-0`} ${visible ? `` : `max-sm:hidden`}`}
+          >
+            <HashLink
               to="#features"
+              smooth
               className="text-muted-foreground hover:text-foreground text-sm transition-colors"
             >
-              Features
-            </Link>
-            <Link
+              {t("features")}
+            </HashLink>
+            <HashLink
               to="#presets"
+              smooth
               className="text-muted-foreground hover:text-foreground text-sm transition-colors"
             >
-              Presets
-            </Link>
+              {t("presets")}
+            </HashLink>
             <a
-              href="https://github.com"
+              href="https://github.com/FelipeRicard0/stack-builder"
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-foreground text-sm transition-colors"
             >
               GitHub
             </a>
+            {window.innerWidth <= 640 && <SupportDialog />}
           </nav>
           <div className="flex items-center gap-3">
-            <SupportDialog />
-            <Link to="/builder">
-              <Button size="sm" className="cursor-pointer">
-                Start Building
+            {window.innerWidth >= 640 && <SupportDialog />}
+            <Link to="builder">
+              <Button className="cursor-pointer">
+                {t("start_building")}
                 <ArrowRight />
               </Button>
             </Link>
+            {window.innerWidth <= 640 && (
+              <Button
+                className={`cursor-pointer`}
+                variant="outline"
+                size="icon"
+                onClick={() => {
+                  setMenu(!menu);
+                  setTimeout(() => {
+                    setVisible(!visible);
+                  }, 700);
+                }}
+              >
+                {menu ? <X /> : <Menu />}
+              </Button>
+            )}
           </div>
         </div>
       </header>
@@ -221,17 +217,17 @@ export default function LandingPage() {
               }
             >
               <Sparkles className="mr-2 size-3.5" />
-              Build faster with the right stack
+              {t("build_faster")}
             </Badge>
             <h1
               className={
                 "text-foreground text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl"
               }
             >
-              Build Your Perfect
+              {t("build_your_perfect")}
               <br />
               <span className="from-foreground via-foreground/80 to-muted-foreground bg-linear-to-r bg-clip-text text-transparent">
-                Tech Stack
+                {t("tech_stack")}
               </span>
             </h1>
             <p
@@ -239,36 +235,19 @@ export default function LandingPage() {
                 "text-muted-foreground mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-pretty"
               }
             >
-              Stop wasting time configuring projects from scratch. Select your
-              technologies, get the perfect commands, and start building in
-              seconds.
+              {t("stop_wasting_time")}
             </p>
             <div
               className={
                 "mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
               }
             >
-              <Link to="/builder">
+              <Link to="builder">
                 <Button className="group" size={"lg"}>
-                  Open Builder
+                  {t("open_builder")}
                   <ArrowRight className="ml-0.5 size-4 transition-transform group-hover:translate-x-1" />
                 </Button>
               </Link>
-              <Button
-                onClick={handleCopy}
-                size={"lg"}
-                className="group border-border bg-secondary/50 hover:bg-secondary gap-3 border font-mono"
-              >
-                <span className="text-muted-foreground">$</span>
-                <span className="text-foreground">
-                  npx create-stackforge@latest my-app
-                </span>
-                {copied ? (
-                  <Check className="text-foreground size-4" />
-                ) : (
-                  <Copy className="text-muted-foreground group-hover:text-foreground size-4 transition-colors" />
-                )}
-              </Button>
             </div>
           </div>
           <div className={"relative mt-20"}>
@@ -299,10 +278,10 @@ export default function LandingPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <h2 className="text-foreground text-3xl font-bold tracking-tight">
-              Everything you need to start fast
+              {t("everything_you_need")}
             </h2>
             <p className="text-muted-foreground mt-4">
-              A thoughtfully designed builder for modern web development.
+              {t("thoughtfully_designed")}
             </p>
           </div>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -315,10 +294,10 @@ export default function LandingPage() {
                   <feature.icon className="size-5" />
                 </div>
                 <h3 className="text-card-foreground mb-2 font-semibold">
-                  {feature.title}
+                  {t(feature.title)}
                 </h3>
                 <p className="text-muted-foreground text-sm leading-relaxed">
-                  {feature.description}
+                  {t(feature.description)}
                 </p>
               </div>
             ))}
@@ -329,10 +308,10 @@ export default function LandingPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <h2 className="text-foreground text-3xl font-bold tracking-tight">
-              Start with a preset
+              {t("start_with_preset")}
             </h2>
             <p className="text-muted-foreground mt-4">
-              Jump-start your project with community-favorite combinations.
+              {t("jump_start_project")}
             </p>
           </div>
 
@@ -340,7 +319,7 @@ export default function LandingPage() {
             {presets.map((preset) => (
               <Link
                 key={preset.id}
-                to={`/builder?preset=${preset.id}`}
+                to={`builder?preset=${preset.id}`}
                 className="group border-border bg-card hover:border-foreground/20 hover:bg-secondary/50 border p-6 transition-all"
               >
                 <h3 className="text-card-foreground mb-4 font-semibold">
@@ -358,7 +337,7 @@ export default function LandingPage() {
                   ))}
                 </div>
                 <div className="text-muted-foreground group-hover:text-foreground mt-4 flex items-center text-sm transition-colors">
-                  Use this preset
+                  {t("use_this_preset")}
                   <ArrowRight className="ml-2 h-3 w-3" />
                 </div>
               </Link>
@@ -370,16 +349,13 @@ export default function LandingPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="text-foreground text-3xl font-bold tracking-tight">
-              Ready to build something great?
+              {t("ready_build_great")}
             </h2>
-            <p className="text-muted-foreground mt-4">
-              Join thousands of developers who use StackForge to start their
-              projects faster.
-            </p>
+            <p className="text-muted-foreground mt-4">{t("join_thousands")}</p>
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Link to="/builder">
+              <Link to="builder">
                 <Button size="lg">
-                  Launch Builder
+                  {t("launch_builder")}
                   <ArrowRight />
                 </Button>
               </Link>
@@ -390,7 +366,7 @@ export default function LandingPage() {
               >
                 <Button variant="outline" size="lg">
                   <Github />
-                  View on GitHub
+                  {t("view_on_github")}
                 </Button>
               </a>
             </div>
@@ -404,10 +380,10 @@ export default function LandingPage() {
               <div className="bg-foreground text-background flex size-6 items-center justify-center">
                 <Layers className="size-4" />
               </div>
-              <span className="text-sm font-medium">StackForge</span>
+              <span className="text-sm font-medium">Stack Builder</span>
             </div>
-            <p className="text-muted-foreground text-sm">
-              Built with care for the developer community.
+            <p className="text-muted-foreground text-sm max-sm:text-center">
+              {t("built_with_care")}
             </p>
             <div className="flex items-center gap-4">
               <a
@@ -420,7 +396,7 @@ export default function LandingPage() {
                 <Github className="size-5" />
               </a>
               <a
-                href="https://twitter.com"
+                href="https://x.com/felipe_prado0"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-foreground transition-colors"

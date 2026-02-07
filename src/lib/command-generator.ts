@@ -4,29 +4,15 @@ export type CommandStep = {
   description?: string;
 };
 
-/**
- * Valida seleções para detectar dependências conflitantes ou redundantes.
- *
- * @param selections - Set de strings representando as tecnologias selecionadas
- * @returns Array de strings contendo avisos sobre conflitos ou incompatibilidades
- *
- * @example
- * ```ts
- * const warnings = validateSelections(new Set(["biome", "eslint"]));
- * // Retorna: ["Biome e ESLint podem conflitar. Recomenda-se escolher apenas um."]
- * ```
- */
 export function validateSelections(selections: Set<string>): string[] {
   const warnings: string[] = [];
 
-  // Verificar linters conflitantes
   if (selections.has("biome") && selections.has("eslint")) {
     warnings.push(
       "Biome e ESLint podem conflitar. Recomenda-se escolher apenas um.",
     );
   }
 
-  // Verificar múltiplos ORMs
   const orms = ["drizzle", "prisma", "mongoose"];
   const selectedOrms = orms.filter((orm) => selections.has(orm));
   if (selectedOrms.length > 1) {
@@ -35,21 +21,18 @@ export function validateSelections(selections: Set<string>): string[] {
     );
   }
 
-  // Verificar múltiplos gerenciadores de Git hooks
   if (selections.has("husky") && selections.has("lefthook")) {
     warnings.push(
       "Husky e Lefthook são ambos gerenciadores de Git hooks. Escolha apenas um.",
     );
   }
 
-  // Verificar Auth.js sem Next.js
   if (selections.has("authjs") && !selections.has("nextjs")) {
     warnings.push(
       "Auth.js (next-auth) é projetado principalmente para Next.js.",
     );
   }
 
-  // Verificar múltiplos routers
   const routers = ["tanstack-router", "react-router"];
   const selectedRouters = routers.filter((router) => selections.has(router));
   if (selectedRouters.length > 1) {
@@ -58,23 +41,9 @@ export function validateSelections(selections: Set<string>): string[] {
     );
   }
 
-  // Verificar TanStack Router sem framework adequado
-  if (
-    selections.has("tanstack-router") &&
-    !selections.has("tanstack-start") &&
-    !selections.has("nextjs") &&
-    !selections.has("react-router")
-  ) {
-    // TanStack Router é para React, então está ok se houver React base
-    // Este aviso só será mostrado se nenhum framework React estiver selecionado
-  }
-
   return warnings;
 }
 
-/**
- * Constantes para agrupamentos de frameworks e tecnologias.
- */
 const FRAMEWORKS_WITH_TAILWIND = [
   "nextjs",
   "expo-uniwind",
@@ -88,44 +57,10 @@ const FRAMEWORKS_WITH_TAILWIND = [
   "nuxt",
 ];
 
-// Constantes documentadas para referência futura
-// const NODE_FRAMEWORKS = ["express", "fastify", "hono", "elysia"];
-// const EXPO_FRAMEWORKS = ["expo-bare", "expo-uniwind", "expo-unistyles"];
-// const FRONTEND_FRAMEWORKS = [
-//   "nextjs",
-//   "tanstack-router",
-//   "react-router",
-//   "tanstack-start",
-//   "nuxt",
-//   "astro",
-//   "svelte",
-//   "solid",
-// ];
-
-/**
- * Verifica se o set de seleções contém qualquer uma das opções fornecidas.
- *
- * @param selections - Set de strings representando as seleções
- * @param options - Array de strings para verificar
- * @returns true se qualquer opção estiver em selections
- */
 function hasAnySelection(selections: Set<string>, options: string[]): boolean {
   return options.some((option) => selections.has(option));
 }
 
-/**
- * Gera uma lista de passos de comando para configurar um projeto baseado nas seleções do usuário.
- *
- * @param projectName - Nome do projeto a ser criado
- * @param selections - Set de strings representando as tecnologias selecionadas
- * @returns Array de objetos CommandStep contendo label, command e description
- *
- * @example
- * ```ts
- * const steps = generateCommands("my-app", new Set(["nextjs", "typescript", "tailwindcss"]));
- * // Retorna comandos para criar um projeto Next.js com TypeScript e Tailwind
- * ```
- */
 export function generateCommands(
   projectName: string,
   selections: Set<string>,
@@ -163,20 +98,15 @@ export function generateCommands(
           ? "yarn add -D"
           : "bun add -d";
 
-  // Track if initialization includes cd (for manual mkdir cases)
   let needsSeparateCd = false;
 
-  // Helper to check if using Tailwind (for prettier-plugin-tailwindcss)
   const usesTailwind =
     hasAnySelection(selections, FRAMEWORKS_WITH_TAILWIND) ||
     selections.has("tailwindcss");
 
-  // 1. Project initialization
   if (selections.has("nextjs")) {
-    // Build Next.js command with only selected options
     let nextCmd = `${pmx === "npx" ? "npx" : pm} create${pmx === "npx" ? "-" : " "}next-app@latest ${projectName}`;
 
-    // Add conditional flags based on user selections
     const flags: string[] = [];
 
     flags.push(selections.has("typescript") ? "--typescript" : "--js");
@@ -219,7 +149,6 @@ export function generateCommands(
     });
     needsSeparateCd = true;
   } else if (selections.has("solid")) {
-    // Usar template ts se TypeScript selecionado, caso contrário js
     const solidTemplate = selections.has("typescript") ? "ts" : "js";
     const description = selections.has("typescript")
       ? "Initialize a new Solid project with TypeScript"
@@ -239,7 +168,6 @@ export function generateCommands(
     });
     needsSeparateCd = true;
   } else if (selections.has("tanstack-router")) {
-    // Usar template react-ts se TypeScript selecionado, caso contrário react
     const viteTemplate = selections.has("typescript") ? "react-ts" : "react";
     const description = selections.has("typescript")
       ? "Initialize a new React project with Vite and TypeScript"
@@ -252,7 +180,6 @@ export function generateCommands(
     });
     needsSeparateCd = true;
   } else if (selections.has("react-router")) {
-    // Usar template react-ts se TypeScript selecionado, caso contrário react
     const viteTemplate = selections.has("typescript") ? "react-ts" : "react";
     const description = selections.has("typescript")
       ? "Initialize a new React project with Vite and TypeScript"
@@ -290,7 +217,6 @@ export function generateCommands(
     });
     needsSeparateCd = true;
   } else if (selections.has("express") || selections.has("fastify")) {
-    // For Express/Fastify, combine mkdir + cd + init + folder structure into one step
     const initCmd =
       pm === "npm"
         ? `npm init -y`
@@ -306,9 +232,8 @@ export function generateCommands(
       description:
         "Create a new Node.js project directory with recommended structure and initialize package.json",
     });
-    needsSeparateCd = false; // Already included cd
+    needsSeparateCd = false;
   } else {
-    // Generic initialization - combine mkdir + cd + init
     const initCmd =
       pm === "npm"
         ? `npm init -y`
@@ -322,10 +247,9 @@ export function generateCommands(
       command: `mkdir ${projectName} && cd ${projectName} && ${initCmd}`,
       description: "Create a new project directory and initialize package.json",
     });
-    needsSeparateCd = false; // Already included cd
+    needsSeparateCd = false;
   }
 
-  // 2. Create server structure for monorepo (frontend + backend)
   const isMonorepo =
     (selections.has("nextjs") ||
       selections.has("tanstack-router") ||
@@ -345,7 +269,6 @@ export function generateCommands(
     });
   }
 
-  // 3. Navigate to project (only if not already included in init command)
   if (!isMonorepo && needsSeparateCd) {
     steps.push({
       label: "Navigate to project",
@@ -354,11 +277,9 @@ export function generateCommands(
     });
   }
 
-  // 4. Additional dependencies based on selections
   const deps: string[] = [];
   const devDeps: string[] = [];
 
-  // Router dependencies
   if (selections.has("tanstack-router") && !selections.has("tanstack-start")) {
     deps.push("@tanstack/react-router");
     devDeps.push("@tanstack/router-plugin");
@@ -368,7 +289,6 @@ export function generateCommands(
     deps.push("react-router-dom");
   }
 
-  // Backend framework (if not already included)
   if (selections.has("hono") && !steps[0].command.includes("hono")) {
     deps.push("hono");
   }
@@ -403,7 +323,6 @@ export function generateCommands(
     );
   }
 
-  // Database & ORM
   if (selections.has("drizzle")) {
     deps.push("drizzle-orm");
     devDeps.push("drizzle-kit");
@@ -449,7 +368,6 @@ export function generateCommands(
   }
 
   if (selections.has("authjs")) {
-    // Use next-auth v5 (stable) - anteriormente era beta
     deps.push("next-auth");
   }
 
@@ -457,9 +375,7 @@ export function generateCommands(
     deps.push("lucia", "@lucia-auth/adapter-drizzle");
   }
 
-  // UI Libraries
   if (selections.has("shadcn")) {
-    // shadcn is installed via CLI, but we need the base deps
     deps.push("class-variance-authority", "clsx", "tailwind-merge");
   }
 
@@ -475,7 +391,6 @@ export function generateCommands(
     deps.push("@ark-ui/react");
   }
 
-  // Payments
   if (selections.has("stripe")) {
     deps.push("stripe", "@stripe/stripe-js");
   }
@@ -484,7 +399,6 @@ export function generateCommands(
     deps.push("@polar-sh/nextjs");
   }
 
-  // Validation
   if (selections.has("zod")) {
     deps.push("zod");
   }
@@ -493,49 +407,42 @@ export function generateCommands(
     deps.push("valibot");
   }
 
-  // TypeScript (Abordagem Minimalista)
   if (selections.has("typescript")) {
-    // Lista de frameworks que JÁ instalam TypeScript via CLI
     const frameworkInstallsTS =
       (selections.has("nextjs") &&
-        steps[0]?.command.includes("--typescript")) || // create-next-app --typescript
-      selections.has("nuxt") || // nuxi init (sempre TS)
-      selections.has("astro") || // create astro (inclui TS)
-      selections.has("tanstack-start") || // create-tanstack-app (inclui TS)
+        steps[0]?.command.includes("--typescript")) ||
+      selections.has("nuxt") ||
+      selections.has("astro") ||
+      selections.has("tanstack-start") ||
       (selections.has("tanstack-router") &&
-        steps[0]?.command.includes("react-ts")) || // vite react-ts
+        steps[0]?.command.includes("react-ts")) ||
       (selections.has("react-router") &&
-        steps[0]?.command.includes("react-ts")) || // vite react-ts
-      (selections.has("svelte") && steps[0]?.command.includes("sv create")) || // sv create instala TS
-      (selections.has("solid") && steps[0]?.command.includes("templates/ts")); // Solid ts template
+        steps[0]?.command.includes("react-ts")) ||
+      (selections.has("svelte") && steps[0]?.command.includes("sv create")) ||
+      (selections.has("solid") && steps[0]?.command.includes("templates/ts"));
 
-    // Só instalar typescript se o framework NÃO instalou
     if (!frameworkInstallsTS) {
       devDeps.push("typescript");
     }
 
-    // Lista de frameworks que JÃ instalam @types/node via CLI
     const frameworkInstallsTypesNode =
       (selections.has("nextjs") &&
-        steps[0]?.command.includes("--typescript")) || // create-next-app --typescript
-      selections.has("nuxt") || // nuxi init
-      selections.has("astro") || // create astro
-      selections.has("tanstack-start") || // create-tanstack-app
-      (selections.has("hono") && steps[0]?.command.includes("create hono")) || // hono CLI
-      (selections.has("elysia") && steps[0]?.command.includes("create elysia")); // elysia CLI
+        steps[0]?.command.includes("--typescript")) ||
+      selections.has("nuxt") ||
+      selections.has("astro") ||
+      selections.has("tanstack-start") ||
+      (selections.has("hono") && steps[0]?.command.includes("create hono")) ||
+      (selections.has("elysia") && steps[0]?.command.includes("create elysia"));
 
-    // Projetos que NÃO precisam de @types/node (React Native)
     const isReactNative =
       selections.has("expo-bare") ||
       selections.has("expo-uniwind") ||
       selections.has("expo-unistyles");
 
-    // Instalar @types/node apenas se: 1. Não é React Native 2. Framework não instalou
     if (!isReactNative && !frameworkInstallsTypesNode) {
       devDeps.push("@types/node");
     }
 
-    // tsx e tsc-alias: APENAS para backends puros que precisam executar TS diretamente
     const needsRuntimeTS =
       selections.has("express") ||
       selections.has("fastify") ||
@@ -547,12 +454,10 @@ export function generateCommands(
     }
   }
 
-  // Tailwind CSS (Abordagem Minimalista)
   if (selections.has("tailwindcss") && !selections.has("nextjs")) {
     devDeps.push("tailwindcss", "@tailwindcss/vite");
   }
 
-  // Tooling
   if (selections.has("biome") && !selections.has("nextjs")) {
     devDeps.push("@biomejs/biome");
   }
@@ -563,7 +468,6 @@ export function generateCommands(
 
   if (selections.has("prettier")) {
     devDeps.push("prettier");
-    // Only add tailwind plugin if using Tailwind CSS
     if (usesTailwind || selections.has("tailwindcss")) {
       devDeps.push("prettier-plugin-tailwindcss");
     }
@@ -596,7 +500,6 @@ export function generateCommands(
     deps.push("react-native-unistyles");
   }
 
-  // Add dependency installation steps
   if (deps.length > 0) {
     steps.push({
       label: "Install dependencies",
@@ -605,7 +508,6 @@ export function generateCommands(
     });
   }
 
-  // Install dev dependencies (excluding packages already installed by framework CLIs)
   if (devDeps.length > 0) {
     steps.push({
       label: "Install dev dependencies",
@@ -615,7 +517,6 @@ export function generateCommands(
     });
   }
 
-  // 4. Setup commands
   if (selections.has("shadcn")) {
     steps.push({
       label: "Initialize shadcn/ui",
@@ -637,8 +538,6 @@ export function generateCommands(
       description: "Generate tsconfig.json",
     });
   }
-
-  // Tailwind CSS is configured automatically - no initialization needed
 
   if (selections.has("prisma")) {
     steps.push({
@@ -672,7 +571,6 @@ export function generateCommands(
     });
   }
 
-  // 5. Git initialization
   if (selections.has("git-init")) {
     steps.push({
       label: "Initialize Git",
@@ -684,20 +582,6 @@ export function generateCommands(
   return steps;
 }
 
-/**
- * Gera um único comando de inicialização de projeto.
- * Retorna apenas o comando primário para criar o projeto, sem etapas adicionais.
- *
- * @param projectName - Nome do projeto a ser criado
- * @param selections - Set de strings representando as tecnologias selecionadas
- * @returns String contendo o comando de inicialização do projeto
- *
- * @example
- * ```ts
- * const cmd = generateSingleCommand("my-app", new Set(["nextjs", "typescript"]));
- * // Retorna: "npx create-next-app@latest my-app --app --src-dir ..."
- * ```
- */
 export function generateSingleCommand(
   projectName: string,
   selections: Set<string>,
@@ -718,9 +602,7 @@ export function generateSingleCommand(
           ? "yarn dlx"
           : "bunx";
 
-  // Return the primary creation command
   if (selections.has("nextjs")) {
-    // Build Next.js command with only selected options
     const nextCmd = `${pmx === "npx" ? "npx" : pm} create${pmx === "npx" ? "-" : " "}next-app@latest ${projectName}`;
 
     const flags: string[] = [];

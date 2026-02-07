@@ -12,7 +12,7 @@ import ru from "./locales/ru.json";
 import ja from "./locales/ja.json";
 
 i18n.use(initReactI18next).init({
-  lng: navigator.language,
+  lng: navigator.language.split("-")[0],
   fallbackLng: "en",
   resources: {
     pt: { translation: pt },

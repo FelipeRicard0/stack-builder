@@ -2,83 +2,72 @@
 
 # Stack Builder
 
-O **Stack Builder** é uma ferramenta para montar rapidamente o setup de um projeto. Você escolhe a stack e as tecnologias desejadas, e a aplicação gera comandos prontos para copiar e colar no terminal, agilizando o início do desenvolvimento.
+**Stack Builder** is a tool designed to quickly set up a project environment. You choose the stack and desired technologies, and the application generates ready-to-use commands that you can copy and paste into the terminal, speeding up the start of development.
 
-Além disso, o Stack Builder sugere uma estrutura de pastas organizada, seguindo boas práticas para cada stack escolhida.
+In addition, Stack Builder suggests an organized folder structure, following best practices for each selected stack.
 
-## 🚀 Demonstração
+## 🚀 Demo
 
-Confira abaixo uma prévia visual do Stack Builder em ação:
+Check out a visual preview of Stack Builder in action below:
 
-### Edição de texto com formatação
+### Editing with Formatting
 
 ![Demonstração1](/docs/Demontração%201.gif)
-A interface permite selecionar opções de stack e visualizar rapidamente os comandos e a estrutura recomendada para o projeto.
+The interface allows you to select stack options and quickly view the commands and the recommended project structure.
 
-## 📦 Funcionalidades
+## 📦 Features
 
-- ✅ Geração automática de comandos para setup do projeto
-- ✅ Sugestão de estrutura de pastas baseada em boas práticas
-- ✅ Interface responsiva e amigável
-- ✅ Temas com estilização moderna via TailwindCSS e shadcn/ui
-- ✅ Ícones interativos com lucide-react
-- ✅ Suporte para 10 idiomas
-- 🔧 Construído com Next.js + TypeScript, garantindo performance e escalabilidade
-- 🔧 Código limpo com padronização via Biome
+- ✅ Automatic generation of setup commands
+- ✅ Folder structure suggestions based on best practices
+- ✅ Responsive and user-friendly interface
+- ✅ Modern themed styling with TailwindCSS and shadcn/ui
+- ✅ Interactive icons with lucide-react
+- ✅ Support for 10 languages
+- 🔧 Built with Vite + React + TypeScript, ensuring performance and scalability
+- 🔧 Clean code with standardization via ESLint
 
-## 🛠️ Tecnologias Utilizadas
+## 🛠️ Technologies Used
 
-- **Linguagem/Framework:**
+- **Language/Framework:**
   - [TypeScript](https://www.typescriptlang.org/)
-  - [React](https://react.dev/) com [Vite](https://vite.dev/)
+  - [React](https://react.dev/) with [Vite](https://vite.dev/)
 
-- **Gerenciamento de estado:**
-  - [Zustand](https://zustand-demo.pmnd.rs/)
-
-- **Estilização:**
+- **Styling:**
   - [TailwindCSS](https://tailwindcss.com/)
   - [shadcn/ui](https://ui.shadcn.com/)
 
-- **Ícones:**
+- **Icons:**
   - [lucide-react](https://lucide.dev/)
 
-- **Formatação & Qualidade de Código:**
+- **Formatting & Code Quality:**
   - [ESLint](https://eslint.org/)
   - [Prettier](https://prettier.io/)
 
-- **Outras ferramentas:**
-  - [Git](https://git-scm.com/) & [GitHub](https://github.com/)
+- **Other tools:**
+  - [Git](https://git-scm.com/) and [GitHub](https://github.com/)
 
-## ⚙ Instalação
+## ⚙ Installation
 
-Para rodar o projeto localmente, siga os passos abaixo.
+To run the project locally, follow the steps below.
 
 > [!NOTE]  
-> **Dica**: Antes de começar, certifique-se de ter o **Node.js** instalado na versão mais recente.
+> **Tip**: Before starting, make sure you have **Node.js** installed in the latest version.
 
-1. Clone o repositório:
+1. Clone the repository:
 
    ```bash
    git clone https://github.com/FelipeRicard0/stack-builder.git
    ```
 
-2. Instale as dependências:
+2. Install dependencies:
    ```bash
    pnpm install
    ```
-3. Rode o projeto:
+3. Run the project:
    ```bash
    pnpm run dev
    ```
 
-## 📁 Variáveis de Ambiente
+## License
 
-Crie um arquivo `.env` na raiz do projeto e adicione as seguinte variáveis:
-
-```env
-VITE_API_KEY=url_da_api
-```
-
-## Licença
-
-Distribuído sob a licença personalizada de uso não comercial. Veja [`LICENSE`](https://github.com/FelipeRicard0/stack-builder/blob/main/LICENSE) para mais informações.
+Distributed under a custom non-commercial use license. See [`LICENSE`](https://github.com/FelipeRicard0/stack-builder/blob/main/LICENSE) for more information.
