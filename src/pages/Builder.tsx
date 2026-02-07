@@ -502,7 +502,10 @@ function ShareDialog({ selections }: { selections: Set<string> }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" className="w-full gap-1.5 bg-transparent">
+        <Button
+          variant="outline"
+          className="w-full cursor-pointer gap-1.5 bg-transparent"
+        >
           <Share2 className="size-3.5" />
           {t("share")}
         </Button>
@@ -554,7 +557,7 @@ function ShareDialog({ selections }: { selections: Set<string> }) {
             </label>
             <div className="flex gap-2">
               <Input type="text" value={shareUrl} readOnly />
-              <Button onClick={handleCopy}>
+              <Button onClick={handleCopy} className="cursor-pointer">
                 {copied ? (
                   <>
                     <Check className="h-4 w-4" />
@@ -775,7 +778,12 @@ export default function BuilderPage() {
             <div className="flex items-center gap-2">
               <Tooltip disableHoverableContent>
                 <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon" onClick={handleReset}>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="cursor-pointer"
+                    onClick={handleReset}
+                  >
                     <RotateCcw className="size-4" />
                   </Button>
                 </TooltipTrigger>
@@ -785,7 +793,12 @@ export default function BuilderPage() {
               </Tooltip>
               <Tooltip disableHoverableContent>
                 <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon" onClick={handleRandom}>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="cursor-pointer"
+                    onClick={handleRandom}
+                  >
                     <Shuffle className="size-4" />
                   </Button>
                 </TooltipTrigger>
@@ -795,7 +808,10 @@ export default function BuilderPage() {
               </Tooltip>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="gap-1 bg-transparent">
+                  <Button
+                    variant="outline"
+                    className="cursor-pointer gap-1 bg-transparent"
+                  >
                     {t("presets")}
                     <ChevronDown className="size-3" />
                   </Button>
@@ -837,7 +853,12 @@ export default function BuilderPage() {
                 <span className="text-muted-foreground text-xs font-medium">
                   {t("command_label")}
                 </span>
-                <Button variant="ghost" size="icon-xs" onClick={handleCopy}>
+                <Button
+                  className="cursor-pointer"
+                  variant="ghost"
+                  size="icon-xs"
+                  onClick={handleCopy}
+                >
                   {copied ? (
                     <Check className="text-foreground size-3" />
                   ) : (

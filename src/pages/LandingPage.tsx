@@ -135,27 +135,39 @@ export default function LandingPage() {
   const [menu, setMenu] = useState(false);
   const [visible, setVisible] = useState(false);
 
+  function toggleNav() {
+    if (window.innerWidth <= 640) {
+      setMenu(!menu);
+      setTimeout(() => {
+        setVisible(!visible);
+      }, 700);
+    } else return;
+  }
+
   return (
     <>
       <header
         className={`border-border/50 bg-background/80 fixed top-0 z-10 w-screen border-b backdrop-blur-md max-sm:transition-[height] max-sm:duration-1000 ${menu ? `max-sm:h-66` : `max-sm:h-16.5`}`}
       >
         <div className="relative mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-2">
-            <img
-              className="size-8 dark:invert"
-              src="/Logo_dark.svg"
-              alt="Logo"
-            />
-            <span className="text-lg font-semibold tracking-tight max-sm:leading-5.5">
-              Stack Builder
+          <HashLink smooth to={"#"}>
+            <span className="flex items-center gap-2">
+              <img
+                className="size-8 dark:invert"
+                src="/Logo_dark.svg"
+                alt="Logo"
+              />
+              <span className="text-lg font-semibold tracking-tight max-sm:text-base max-sm:leading-5">
+                Stack Builder
+              </span>
             </span>
-          </div>
+          </HashLink>
           <nav
             className={`absolute left-1/2 flex -translate-x-1/2 items-center gap-6 max-sm:top-17 max-sm:w-full max-sm:translate-y-0 max-sm:flex-col max-sm:gap-4 max-sm:p-4 max-sm:transition-all ${menu ? `` : `max-sm:opacity-0`} ${visible ? `` : `max-sm:hidden`}`}
           >
             <HashLink
               to="#features"
+              onClick={toggleNav}
               smooth
               className="text-muted-foreground hover:text-foreground text-sm transition-colors"
             >
@@ -163,6 +175,7 @@ export default function LandingPage() {
             </HashLink>
             <HashLink
               to="#presets"
+              onClick={toggleNav}
               smooth
               className="text-muted-foreground hover:text-foreground text-sm transition-colors"
             >
@@ -170,6 +183,7 @@ export default function LandingPage() {
             </HashLink>
             <a
               href="https://github.com/FelipeRicard0/stack-builder"
+              onClick={toggleNav}
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-foreground text-sm transition-colors"
@@ -243,7 +257,7 @@ export default function LandingPage() {
               }
             >
               <Link to="builder">
-                <Button className="group" size={"lg"}>
+                <Button className="group cursor-pointer" size={"lg"}>
                   {t("open_builder")}
                   <ArrowRight className="ml-0.5 size-4 transition-transform group-hover:translate-x-1" />
                 </Button>
@@ -354,7 +368,7 @@ export default function LandingPage() {
             <p className="text-muted-foreground mt-4">{t("join_thousands")}</p>
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link to="builder">
-                <Button size="lg">
+                <Button size="lg" className="cursor-pointer">
                   {t("launch_builder")}
                   <ArrowRight />
                 </Button>
@@ -364,7 +378,7 @@ export default function LandingPage() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Button variant="outline" size="lg">
+                <Button variant="outline" className="cursor-pointer" size="lg">
                   <Github />
                   {t("view_on_github")}
                 </Button>
