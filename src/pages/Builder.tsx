@@ -553,7 +553,7 @@ function ShareDialog({ selections }: { selections: Set<string> }) {
 
           <div>
             <label className="mb-2 block text-sm font-medium">
-              {t("share_lin")}
+              {t("share_link")}
             </label>
             <div className="flex gap-2">
               <Input type="text" value={shareUrl} readOnly />
