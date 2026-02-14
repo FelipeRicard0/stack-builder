@@ -73,14 +73,7 @@ const presets = [
   {
     id: "fullstack-react",
     name: "Fullstack React",
-    techs: [
-      "TanStack Router",
-      "Hono",
-      "tRPC",
-      "SQLite",
-      "Drizzle",
-      "Better Auth",
-    ],
+    techs: ["TanStack", "Hono", "tRPC", "SQLite", "Drizzle", "Better Auth"],
   },
 ];
 
@@ -147,7 +140,7 @@ export default function LandingPage() {
   return (
     <>
       <header
-        className={`border-border/50 bg-background/80 fixed top-0 z-10 w-screen border-b backdrop-blur-md max-sm:transition-[height] max-sm:duration-1000 ${menu ? `max-sm:h-66` : `max-sm:h-16.5`}`}
+        className={`border-border/50 bg-background/80 fixed top-0 z-10 w-screen border-b backdrop-blur-md max-sm:transition-[height] max-sm:duration-1000 ${menu ? (window.innerWidth >= 360 ? `max-sm:h-66` : `max-sm:h-78`) : `max-sm:h-16.5`}`}
       >
         <div className="relative mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <HashLink smooth to={"#"}>
@@ -191,15 +184,25 @@ export default function LandingPage() {
               GitHub
             </a>
             {window.innerWidth <= 640 && <SupportDialog />}
+            {window.innerWidth < 360 && (
+              <Link to="builder">
+                <Button className="cursor-pointer">
+                  {t("start_building")}
+                  <ArrowRight />
+                </Button>
+              </Link>
+            )}
           </nav>
           <div className="flex items-center gap-3">
             {window.innerWidth >= 640 && <SupportDialog />}
-            <Link to="builder">
-              <Button className="cursor-pointer">
-                {t("start_building")}
-                <ArrowRight />
-              </Button>
-            </Link>
+            {window.innerWidth >= 360 && (
+              <Link to="builder">
+                <Button className="cursor-pointer">
+                  {t("start_building")}
+                  <ArrowRight />
+                </Button>
+              </Link>
+            )}
             {window.innerWidth <= 640 && (
               <Button
                 className={`cursor-pointer`}

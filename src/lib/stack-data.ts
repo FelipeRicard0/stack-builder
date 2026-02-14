@@ -24,8 +24,8 @@ export const categories: Category[] = [
     singleSelect: true,
     technologies: [
       {
-        id: "tanstack-router",
-        name: "TanStack Router",
+        id: "tanstack",
+        name: "TanStack",
         description: "Modern type-safe router for React",
         icon: "https://tanstack.com/favicon.ico",
         color: "#FFA171",
@@ -37,14 +37,6 @@ export const categories: Category[] = [
         description: "Declarative routing for React",
         icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/reactrouter/reactrouter-original.svg",
         color: "#CA4245",
-        category: "frontend",
-      },
-      {
-        id: "tanstack-start",
-        name: "TanStack Start",
-        description: "Full-stack React and Solid framework",
-        icon: "https://tanstack.com/favicon.ico",
-        color: "#FFA171",
         category: "frontend",
       },
       {
@@ -63,7 +55,7 @@ export const categories: Category[] = [
         icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nuxt/nuxt-original.svg",
         color: "#00DC82",
         category: "frontend",
-        incompatibleWith: ["nextjs", "react-router", "tanstack-router"],
+        incompatibleWith: ["nextjs", "react-router", "tanstack"],
       },
       {
         id: "svelte",
@@ -850,7 +842,7 @@ export const presets: Preset[] = [
     name: "Fullstack React",
     description: "Modern fullstack React setup",
     selections: [
-      "tanstack-router",
+      "tanstack",
       "no-native",
       "hono",
       "bun",
@@ -872,7 +864,6 @@ export const presets: Preset[] = [
     name: "Edge-First",
     description: "Optimized for edge computing",
     selections: [
-      "tanstack-start",
       "no-native",
       "hono",
       "cloudflare-workers",

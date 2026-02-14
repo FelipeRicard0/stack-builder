@@ -33,7 +33,7 @@ export function validateSelections(selections: Set<string>): string[] {
     );
   }
 
-  const routers = ["tanstack-router", "react-router"];
+  const routers = ["tanstack", "react-router"];
   const selectedRouters = routers.filter((router) => selections.has(router));
   if (selectedRouters.length > 1) {
     warnings.push(
@@ -48,8 +48,7 @@ const FRAMEWORKS_WITH_TAILWIND = [
   "nextjs",
   "expo-uniwind",
   "shadcn",
-  "tanstack-router",
-  "tanstack-start",
+  "tanstack",
   "react-router",
   "astro",
   "svelte",
@@ -160,24 +159,41 @@ export function generateCommands(
       description: description,
     });
     needsSeparateCd = true;
-  } else if (selections.has("tanstack-start")) {
-    steps.push({
-      label: "Create TanStack Start project",
-      command: `${pmx} create-tanstack-app@latest ${projectName}`,
-      description: "Initialize a new TanStack Start project",
-    });
-    needsSeparateCd = true;
-  } else if (selections.has("tanstack-router")) {
-    const viteTemplate = selections.has("typescript") ? "react-ts" : "react";
+  } else if (selections.has("tanstack")) {
+    let tanstackCmd = `npx @tanstack/cli@latest create ${projectName} --package-manager ${pm}`;
+
+    const flags: string[] = [];
+
+    if (selections.has("better-auth")) flags.push("better-auth");
+    if (selections.has("clerk")) flags.push("clerk");
+    if (selections.has("eslint")) flags.push("eslint");
+    if (selections.has("biome")) flags.push("biome");
+    if (selections.has("shadcn")) flags.push("shadcn");
+    if (selections.has("neon")) flags.push("neon");
+    if (selections.has("convex")) flags.push("convex");
+    if (selections.has("prisma")) flags.push("prisma");
+    if (selections.has("drizzle")) flags.push("drizzle");
+    if (selections.has("orpc")) flags.push("orpc");
+    if (selections.has("trpc")) flags.push("trpc");
+
+    if (flags.length > 0) {
+      tanstackCmd += ` --add-ons ${flags.join(",")}`;
+    }
+    // --no-git sempre
+    if (!selections.has("git-init")) {
+      tanstackCmd += " --no-git";
+    }
+
     const description = selections.has("typescript")
       ? "Initialize a new React project with Vite and TypeScript"
       : "Initialize a new React project with Vite";
 
     steps.push({
-      label: "Create React + Vite project with TanStack Router",
-      command: `${pm} create vite@latest ${projectName} -- --template ${viteTemplate}`,
+      label: "Create React + Vite project with TanStack",
+      command: tanstackCmd,
       description: description,
     });
+
     needsSeparateCd = true;
   } else if (selections.has("react-router")) {
     const viteTemplate = selections.has("typescript") ? "react-ts" : "react";
@@ -187,7 +203,7 @@ export function generateCommands(
 
     steps.push({
       label: "Create React + Vite project with React Router",
-      command: `${pm} create vite@latest ${projectName} -- --template ${viteTemplate}`,
+      command: `${pm} create ${pm === "npm" ? "vite@latest" : "vite"} ${projectName} ${pm === "npm" ? "--" : ""} --template ${viteTemplate}`,
       description: description,
     });
     needsSeparateCd = true;
@@ -252,7 +268,7 @@ export function generateCommands(
 
   const isMonorepo =
     (selections.has("nextjs") ||
-      selections.has("tanstack-router") ||
+      selections.has("tanstack") ||
       selections.has("react-router")) &&
     (selections.has("express") ||
       selections.has("fastify") ||
@@ -280,11 +296,6 @@ export function generateCommands(
   const deps: string[] = [];
   const devDeps: string[] = [];
 
-  if (selections.has("tanstack-router") && !selections.has("tanstack-start")) {
-    deps.push("@tanstack/react-router");
-    devDeps.push("@tanstack/router-plugin");
-  }
-
   if (selections.has("react-router")) {
     deps.push("react-router-dom");
   }
@@ -305,7 +316,7 @@ export function generateCommands(
   }
 
   // API layer
-  if (selections.has("trpc")) {
+  if (selections.has("trpc") && !selections.has("tanstack")) {
     deps.push(
       "@trpc/server",
       "@trpc/client",
@@ -314,7 +325,7 @@ export function generateCommands(
     );
   }
 
-  if (selections.has("orpc")) {
+  if (selections.has("orpc") && !selections.has("tanstack")) {
     deps.push(
       "@orpc/server",
       "@orpc/client",
@@ -323,7 +334,7 @@ export function generateCommands(
     );
   }
 
-  if (selections.has("drizzle")) {
+  if (selections.has("drizzle") && !selections.has("tanstack")) {
     deps.push("drizzle-orm");
     devDeps.push("drizzle-kit");
 
@@ -336,7 +347,7 @@ export function generateCommands(
     }
   }
 
-  if (selections.has("prisma")) {
+  if (selections.has("prisma") && !selections.has("tanstack")) {
     deps.push("@prisma/client");
     devDeps.push("prisma");
   }
@@ -346,17 +357,14 @@ export function generateCommands(
   }
 
   // Auth
-  if (selections.has("better-auth")) {
+  if (selections.has("better-auth") && !selections.has("tanstack")) {
     deps.push("better-auth");
   }
 
   if (selections.has("clerk")) {
     if (selections.has("nextjs")) {
       deps.push("@clerk/nextjs");
-    } else if (
-      selections.has("tanstack-router") ||
-      selections.has("react-router")
-    ) {
+    } else if (selections.has("react-router")) {
       deps.push("@clerk/clerk-react");
     } else if (
       selections.has("expo-bare") ||
@@ -375,7 +383,7 @@ export function generateCommands(
     deps.push("lucia", "@lucia-auth/adapter-drizzle");
   }
 
-  if (selections.has("shadcn")) {
+  if (selections.has("shadcn") && !selections.has("tanstack")) {
     deps.push("class-variance-authority", "clsx", "tailwind-merge");
   }
 
@@ -413,9 +421,7 @@ export function generateCommands(
         steps[0]?.command.includes("--typescript")) ||
       selections.has("nuxt") ||
       selections.has("astro") ||
-      selections.has("tanstack-start") ||
-      (selections.has("tanstack-router") &&
-        steps[0]?.command.includes("react-ts")) ||
+      (selections.has("tanstack") && steps[0]?.command.includes("react-ts")) ||
       (selections.has("react-router") &&
         steps[0]?.command.includes("react-ts")) ||
       (selections.has("svelte") && steps[0]?.command.includes("sv create")) ||
@@ -430,7 +436,6 @@ export function generateCommands(
         steps[0]?.command.includes("--typescript")) ||
       selections.has("nuxt") ||
       selections.has("astro") ||
-      selections.has("tanstack-start") ||
       (selections.has("hono") && steps[0]?.command.includes("create hono")) ||
       (selections.has("elysia") && steps[0]?.command.includes("create elysia"));
 
@@ -454,11 +459,19 @@ export function generateCommands(
     }
   }
 
-  if (selections.has("tailwindcss") && !selections.has("nextjs")) {
+  if (
+    selections.has("tailwindcss") &&
+    !selections.has("nextjs") &&
+    !selections.has("tanstack")
+  ) {
     devDeps.push("tailwindcss", "@tailwindcss/vite");
   }
 
-  if (selections.has("biome") && !selections.has("nextjs")) {
+  if (
+    selections.has("biome") &&
+    !selections.has("nextjs") &&
+    !selections.has("tanstack")
+  ) {
     devDeps.push("@biomejs/biome");
   }
 
@@ -517,7 +530,7 @@ export function generateCommands(
     });
   }
 
-  if (selections.has("shadcn")) {
+  if (selections.has("shadcn") && !selections.has("tanstack")) {
     steps.push({
       label: "Initialize shadcn/ui",
       command: `${pmx} shadcn@latest init`,
@@ -539,7 +552,7 @@ export function generateCommands(
     });
   }
 
-  if (selections.has("prisma")) {
+  if (selections.has("prisma") && !selections.has("tanstack")) {
     steps.push({
       label: "Initialize Prisma",
       command: `${pmx} prisma init`,
@@ -547,7 +560,11 @@ export function generateCommands(
     });
   }
 
-  if (selections.has("biome") && !selections.has("nextjs")) {
+  if (
+    selections.has("biome") &&
+    !selections.has("nextjs") &&
+    !selections.has("tanstack")
+  ) {
     steps.push({
       label: "Initialize Biome",
       command: `${pmx} ${pmx === "npx" ? "@biomejs/biome" : "biome"} init`,
@@ -571,7 +588,7 @@ export function generateCommands(
     });
   }
 
-  if (selections.has("git-init")) {
+  if (selections.has("git-init") && !selections.has("tanstack")) {
     steps.push({
       label: "Initialize Git",
       command: "git init",
@@ -637,13 +654,32 @@ export function generateSingleCommand(
     return `${pmx} degit solidjs/templates/${solidTemplate} ${projectName}`;
   }
 
-  if (selections.has("tanstack-start")) {
-    return `${pmx} create-tanstack-app@latest ${projectName}`;
-  }
+  if (selections.has("tanstack")) {
+    let tanstackCmd = `npx @tanstack/cli@latest create ${projectName} --package-manager ${pm}`;
 
-  if (selections.has("tanstack-router")) {
-    const viteTemplate = selections.has("typescript") ? "react-ts" : "react";
-    return `${pm} create vite@latest ${projectName} -- --template ${viteTemplate}`;
+    const flags: string[] = [];
+
+    if (selections.has("better-auth")) flags.push("better-auth");
+    if (selections.has("clerk")) flags.push("clerk");
+    if (selections.has("eslint")) flags.push("eslint");
+    if (selections.has("biome")) flags.push("biome");
+    if (selections.has("shadcn")) flags.push("shadcn");
+    if (selections.has("neon")) flags.push("neon");
+    if (selections.has("convex")) flags.push("convex");
+    if (selections.has("prisma")) flags.push("prisma");
+    if (selections.has("drizzle")) flags.push("drizzle");
+    if (selections.has("orpc")) flags.push("orpc");
+    if (selections.has("trpc")) flags.push("trpc");
+
+    if (flags.length > 0) {
+      tanstackCmd += ` --add-ons ${flags.join(",")}`;
+    }
+    // --no-git sempre
+    if (!selections.has("git-init")) {
+      tanstackCmd += " --no-git";
+    }
+
+    return tanstackCmd;
   }
 
   if (selections.has("react-router")) {
