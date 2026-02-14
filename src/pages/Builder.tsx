@@ -171,8 +171,7 @@ function FolderStructure({
       selections.has("astro") ||
       selections.has("svelte") ||
       selections.has("solid") ||
-      selections.has("tanstack-start") ||
-      selections.has("tanstack-router") ||
+      selections.has("tanstack") ||
       selections.has("react-router") ||
       selections.has("expo-bare") ||
       selections.has("expo-uniwind") ||
